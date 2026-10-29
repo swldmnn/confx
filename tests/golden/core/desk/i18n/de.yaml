@@ -1,0 +1,10 @@
+dimensions.name: Abmessungen
+material_group.name: Material
+material.name: Material
+material.choices.oak: Eiche
+material.choices.steel: Stahl
+width.name: Breite
+depth.name: Tiefe
+area.name: Fläche
+desk.name: Schreibtisch
+oak_surcharge.name: Eichenaufpreis

@@ -1,0 +1,16 @@
+[
+  {
+    "ok": true,
+    "op": "engineVersion",
+    "value": "0.0.0"
+  },
+  {
+    "ok": true,
+    "op": "fixtureFiles",
+    "value": [
+      "i18n/de.yaml",
+      "i18n/en.yaml",
+      "model.yaml"
+    ]
+  }
+]

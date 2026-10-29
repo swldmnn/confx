@@ -1,0 +1,10 @@
+dimensions.name: Dimensions
+material_group.name: Material
+material.name: Material
+material.choices.oak: Oak
+material.choices.steel: Steel
+width.name: Width
+depth.name: Depth
+area.name: Area
+desk.name: Desk
+oak_surcharge.name: Oak surcharge

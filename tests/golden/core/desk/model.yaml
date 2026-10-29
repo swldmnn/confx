@@ -1,0 +1,27 @@
+schemaVersion: 1
+model: desk
+modelVersion: "1.0"
+defaultLocale: en
+translations: {en: i18n/en.yaml, de: i18n/de.yaml}
+sections:
+  - {id: dimensions}
+  - {id: material_group}
+variables:
+  - {id: material, kind: parameter, type: choice, mandatory: true, section: material_group,
+     choices: [{id: oak}, {id: steel}]}
+  - {id: width, kind: parameter, type: int, min: 60, max: 200, mandatory: true, section: dimensions}
+  - {id: depth, kind: parameter, type: int, min: 40, max: 100, default: 60, section: dimensions}
+  - {id: area, kind: output, type: float, precision: 2, section: dimensions}   # square metres
+  - {id: pricePerCm, kind: internal, type: float, default: 1.5}   # constant internal
+  - {id: isPremium, kind: internal, type: bool}                   # calculated internal
+  - {id: deskArticle, kind: internal, type: string, default: "DSK-100"}
+  - {id: premiumArticle, kind: internal, type: string, default: "DSK-OAK"}
+rules:
+  - {id: area_calc, target: area, expr: 'double(width) * double(depth) / 10000.0'}
+  - {id: premium_flag, target: isPremium, expr: 'material == "oak"'}
+  - {id: max_steel, target: width.max, when: 'material == "steel"', expr: '160'}   # otherwise the declared max (200) applies
+pricing: {currency: EUR, pricePrecision: 2}
+items:
+  - {id: desk, article: deskArticle, price: 'double(width) * pricePerCm'}
+  - {id: oak_surcharge, when: isPremium, article: premiumArticle,
+     price: 'double(width) * pricePerCm * 0.2', data: {taxClass: '"standard"'}}

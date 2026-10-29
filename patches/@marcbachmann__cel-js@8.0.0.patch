@@ -1,0 +1,35 @@
+diff --git a/lib/functions.js b/lib/functions.js
+index 66b0a52c37e515833fa093840ae0b1191ae58e3d..5bd57f2afccc5fb155977e9dd9becb6a90b96d85 100644
+--- a/lib/functions.js
++++ b/lib/functions.js
+@@ -223,7 +223,7 @@ export function registerFunctions(registry) {
+ 
+   functionOverload('int(int): int', identity)
+   functionOverload('int(double): int', (v) => {
+-    if (Number.isFinite(v)) return BigInt(Math.trunc(v))
++    if (Number.isFinite(v) && v >= -9223372036854775808 && v < 9223372036854775808) return BigInt(Math.trunc(v))
+     throw evaluationError('numeric_overflow', 'int() type error: integer overflow')
+   })
+ 
+diff --git a/lib/overloads.js b/lib/overloads.js
+index 823f46a6da96b7cc0708b66edc607390a4af6355..d2ef9cbe82fac68588a3eac28bd4ad8856198bd8 100644
+--- a/lib/overloads.js
++++ b/lib/overloads.js
+@@ -20,7 +20,7 @@ export function registerOverloads(registry) {
+   }
+ 
+   unaryOverload('!', 'bool', (a) => !a)
+-  unaryOverload('-', 'int', (a) => -a)
++  unaryOverload('-', 'int', (a, ast) => verifyInteger(-a, ast))
+   binaryOverload('dyn<int>', `==`, `double`, (a, b) => a == b) // eslint-disable-line eqeqeq
+   binaryOverload('dyn<int>', `==`, `uint`, (a, b) => a == b.valueOf()) // eslint-disable-line eqeqeq
+   binaryOverload('int', '*', 'int', (a, b, ast) => verifyInteger(a * b, ast))
+@@ -28,7 +28,7 @@ export function registerOverloads(registry) {
+   binaryOverload('int', '-', 'int', (a, b, ast) => verifyInteger(a - b, ast))
+   binaryOverload('int', '/', 'int', (a, b, ast) => {
+     if (b === MIN_UINT) return throwDivisionByZero(ast)
+-    return a / b
++    return verifyInteger(a / b, ast)
+   })
+   binaryOverload('int', '%', 'int', (a, b, ast) => {
+     if (b === MIN_UINT) return throwModuloByZero(ast)
